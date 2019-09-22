@@ -1,4 +1,3 @@
-
 // LOAD DATA
 
 var friendsData = require("../data/friends");
@@ -11,9 +10,31 @@ module.exports = function(app) {
   });
 
   app.post("/api/friends", function(req, res) {
-      for (var i = 0; i < 10; i++) {
-        // loop through the friends array and compare each score to user score
-        // return the friend that has the smallest total difference score
+    var userData = req.body.scores;
+    var totalDifference = 0;
+    var allDiff = [];
+    console.log(userData);
+      for (var i = 0; i < friendsData.length; i++) {
+        for (var j = 0; j < friendsData[i].scores.length; j++) {
+          var diff =  Math.abs(userData[j]-friendsData[i].scores[j]);
+          parseInt(diff);
+          totalDifference += diff;
+        }
+      
+      allDiff.push(totalDifference);
+      totalDifference = 0;
       }
+      var min = allDiff[0];
+      var minIndex = 0;
+
+      for (var i = 1; i < allDiff.length; i++) {
+        if (allDiff[i] < min) {
+            minIndex = i;
+        }
+      }
+
+      var daFriend = friendsData[minIndex];
+      console.log(daFriend);
+      res.json(daFriend);
   });
 };
